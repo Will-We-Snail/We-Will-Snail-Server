@@ -1,4 +1,5 @@
-﻿namespace Extension{
+﻿namespace Extension
+{
     public interface IExtension
     {
         public void init();
