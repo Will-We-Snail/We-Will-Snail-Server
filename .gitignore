@@ -4,6 +4,7 @@
 ###################
 # compiled source #
 ###################
+*.wwsext
 *.com
 *.class
 *.dll

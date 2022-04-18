@@ -12,6 +12,7 @@ class ExtensionLoader
                 Type modClass = modAssembly.GetType("mod", false, true); 
                     IExtension extension = (IExtension) Activator.CreateInstance(modClass);
                     Console.WriteLine(String.Format("Loaded mod {0} with ID {1}", extension.getName(), extension.getID()));
+                    Console.Write("");
             }
         }catch (Exception e){
             Console.WriteLine(e);

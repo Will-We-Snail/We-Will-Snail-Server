@@ -3,6 +3,34 @@
     "tasks": [
         {
             "label": "build",
+            "dependsOn":["CompileExtensionTemplate", "MoveExtensionTemplate", "CompileServer"],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "MoveExtensionTemplate",
+            "command": "mv",
+            "type": "shell",
+            "args": [
+                "",
+                "${workspaceFolder}/ExtensionTemplate/bin/Debug/net6.0/ExtensionTemplate.dll",
+                "${workspaceFolder}/mods/ExtensionTemplate.wwsext"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "CompileExtensionTemplate",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/ExtensionTemplate/ExtensionTemplate.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "CompileServer",
             "command": "dotnet",
             "type": "process",
             "args": [
