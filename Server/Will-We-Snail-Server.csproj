@@ -1,10 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\ExtensionInterface\ExtensionInterface.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="SpaceWizards.Lidgren.Network" Version="0.1.0" />
   </ItemGroup>
 

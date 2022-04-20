@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\ExtensionInterface\ExtensionInterface.csproj" />
+    <ProjectReference Include="..\Server\Will-We-Snail-Server.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

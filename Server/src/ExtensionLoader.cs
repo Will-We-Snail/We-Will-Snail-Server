@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
-using Extension;
+using Lidgren.Network;
+namespace WillWeSnail;
 
 class ExtensionLoader
 {
-    List<IExtension> extensions = new List<IExtension>();
+    Dictionary<Int16, IExtension> extensions = new Dictionary<Int16, IExtension>();
+    public List< Func<Int32, NetServer, Int32>> PeriodicFunctions = new List<Func<int, NetServer, int>>();
     public ExtensionLoader(String ExtensionsPath)
     {
         try
@@ -16,9 +18,11 @@ class ExtensionLoader
                 IExtension extension = (IExtension)Activator.CreateInstance(modClass);
                 if (extension != null)
                 {
-                    extension.init();
-                    extensions.Add(extension);
-                    Console.WriteLine($"Loaded mod {extension.getName()} with ID {extension.getID()}");
+                    extension.Init();
+                    extensions.Add(extension.GetID(), extension);
+                    if(extension.GetPeriodic() != null)
+                        PeriodicFunctions.Add(extension.GetPeriodic());
+                    Console.WriteLine($"Loaded mod {extension.GetName()} with ID {extension.GetID()}");
                 }
                 else
                 {
