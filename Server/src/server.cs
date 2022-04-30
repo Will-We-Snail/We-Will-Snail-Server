@@ -11,7 +11,7 @@ class Server
         NetServer server = new NetServer(config);
         server.Start();
         Boolean running = true;
-        #pragma warning disable CS8622
+#pragma warning disable CS8622
         Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
         {
             e.Cancel = true;
@@ -24,9 +24,35 @@ class Server
         Int32 tickNumber = 0;
         while (running)
         {
-
             // Recieved Packet Management
-            while ((message = server.ReadMessage()) != null) { }
+            while ((message = server.ReadMessage()) != null)
+            {
+                switch (message.MessageType)
+                {
+                    case NetIncomingMessageType.Data:
+                        Int16 ExtensionId = message.ReadInt16();
+                        if (extensions.extensions.ContainsKey(ExtensionId))
+                            extensions.extensions[ExtensionId].ManagePacket(message, server);
+                        else
+                            Console.WriteLine($"Unhandled extension id {ExtensionId}");
+                        break;
+                    case NetIncomingMessageType.StatusChanged:
+                        Console.WriteLine(message.SenderConnection.Status);
+                        if (message.SenderConnection.Status == NetConnectionStatus.Connected)
+                        {
+                            Console.WriteLine($"{message.SenderConnection.Peer.Configuration.LocalAddress} has connected.");
+                        }
+                        if (message.SenderConnection.Status == NetConnectionStatus.Disconnected)
+                        {
+                            Console.WriteLine($"{message.SenderConnection.Peer.Configuration.LocalAddress} has disconnected.");
+                        }
+                        break;
+                    default:
+                        Console.WriteLine($"Unhandled message type {message.MessageType}.");
+                        Console.WriteLine(message.PeekString());
+                        break;
+                }
+            }
 
 
             // Periodic function running.
@@ -39,7 +65,7 @@ class Server
             LastTickTime = CurrentTime + SleepTime;
             if (SleepTime < 0)
             {
-                logError.WriteLine($"Error: Tick has overrun by {SleepTime}, consider increasing the tick rate.");
+                logError.WriteLine($"Error: Tick has overrun by {-1 * SleepTime}, consider increasing the tick rate.");
             }
             else
             {

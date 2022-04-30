@@ -4,8 +4,8 @@ namespace WillWeSnail;
 
 class ExtensionLoader
 {
-    Dictionary<Int16, IExtension> extensions = new Dictionary<Int16, IExtension>();
-    public List< Func<Int32, NetServer, Int32>> PeriodicFunctions = new List<Func<int, NetServer, int>>();
+    public Dictionary<Int16, IExtension> extensions = new Dictionary<Int16, IExtension>();
+    public List<Func<Int32, NetServer, Int32>> PeriodicFunctions = new List<Func<int, NetServer, int>>();
     public ExtensionLoader(String ExtensionsPath)
     {
         try
@@ -20,7 +20,7 @@ class ExtensionLoader
                 {
                     extension.Init();
                     extensions.Add(extension.GetID(), extension);
-                    if(extension.GetPeriodic() != null)
+                    if (extension.GetPeriodic() != null)
                         PeriodicFunctions.Add(extension.GetPeriodic());
                     Console.WriteLine($"Loaded mod {extension.GetName()} with ID {extension.GetID()}");
                 }
