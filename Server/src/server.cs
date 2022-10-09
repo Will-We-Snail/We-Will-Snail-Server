@@ -11,7 +11,7 @@ class Server
         NetServer server = new NetServer(config);
         server.Start();
         Boolean running = true;
-#pragma warning disable CS8622
+        #pragma warning disable CS8622
         Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
         {
             e.Cancel = true;
@@ -38,13 +38,8 @@ class Server
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         Console.WriteLine(message.SenderConnection.Status);
-                        if (message.SenderConnection.Status == NetConnectionStatus.Connected)
-                        {
-                            Console.WriteLine($"{message.SenderConnection.Peer.Configuration.LocalAddress} has connected.");
-                        }
-                        if (message.SenderConnection.Status == NetConnectionStatus.Disconnected)
-                        {
-                            Console.WriteLine($"{message.SenderConnection.Peer.Configuration.LocalAddress} has disconnected.");
+                        if(message.SenderConnection.Status == NetConnectionStatus.RespondedAwaitingApproval){
+                            message.SenderConnection.Approve();
                         }
                         break;
                     default:
