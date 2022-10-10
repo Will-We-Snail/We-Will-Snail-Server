@@ -2,7 +2,7 @@
 using Lidgren.Network;
 class mod : IExtension
 {
-    private class PlayerPosition
+    private class PlayerData
     {
         public Guid guid;
         public Double posX;
@@ -11,17 +11,19 @@ class mod : IExtension
         public Int32 room;
         public double hSpeed;
         public double vSpeed;
-        public PlayerPosition(Guid guid, Double posX, Double posY, Boolean lookDir, Int32 room)
+        public PlayerData(Guid guid, Double posX, Double posY, Double velX, Double velY, Boolean lookDir, Int32 room)
         {
             this.guid = guid;
             this.posX = posX;
             this.posY = posY;
+            this.hSpeed = velX;
+            this.vSpeed = velY;
             this.lookDir = lookDir;
             this.room = room;
         }
     }
 
-    private Dictionary<Guid, PlayerPosition> positions = new Dictionary<Guid, PlayerPosition>();
+    private Dictionary<Guid, PlayerData> positions = new Dictionary<Guid, PlayerData>();
 
     public void ManagePacket(NetIncomingMessage message, NetServer server)
     {
@@ -33,8 +35,10 @@ class mod : IExtension
                 Int32 LevelId = message.ReadInt32();
                 Double PosX = message.ReadDouble();
                 Double PosY = message.ReadDouble();
+                Double velX = message.ReadDouble();
+                Double velY = message.ReadDouble();
                 Boolean lookDir = message.ReadBoolean();
-                positions[guid] = new PlayerPosition(guid, PosX, PosY, lookDir, LevelId);
+                positions[guid] = new PlayerData(guid, PosX, PosY, velX, velY, lookDir, LevelId);
                 break;
             default:
                 Console.WriteLine("Invalid");
@@ -63,12 +67,14 @@ class mod : IExtension
         outgoingMessage.Write(GetID());
         outgoingMessage.Write((Int16)1);
         outgoingMessage.Write((Int16)positions.Count);
-        foreach (PlayerPosition position in positions.Values)
+        foreach (PlayerData position in positions.Values)
         {
             outgoingMessage.Write(position.guid.ToByteArray());
             outgoingMessage.Write(position.room);
             outgoingMessage.Write(position.posX);
             outgoingMessage.Write(position.posY);
+            outgoingMessage.Write(position.hSpeed);
+            outgoingMessage.Write(position.vSpeed);
             outgoingMessage.Write(position.lookDir);
         }
         server.SendToAll(outgoingMessage, NetDeliveryMethod.ReliableSequenced);
