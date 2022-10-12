@@ -14,7 +14,14 @@ class ExtensionLoader
             foreach (string mod in loadingmods)
             {
                 Assembly modAssembly = Assembly.LoadFrom(mod);
-                Type modClass = modAssembly.GetType("mod", false, true);
+                Type modClass = modAssembly.GetTypes()
+                    .FirstOrDefault(modType => modType.GetInterfaces().Contains(typeof(IExtension)));
+                
+                if(modClass is null) {
+                    Console.WriteLine($"File {mod} has a wwsext file extension, but does not appear to be an extension. Skipping.");
+                    continue;
+                }
+                
                 IExtension extension = (IExtension)Activator.CreateInstance(modClass);
                 if (extension != null)
                 {
