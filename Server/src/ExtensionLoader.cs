@@ -8,6 +8,9 @@ class ExtensionLoader
     public List<Func<Int32, NetServer, Int32>> PeriodicFunctions = new List<Func<int, NetServer, int>>();
     public ExtensionLoader(String ExtensionsPath)
     {
+        if (!Directory.Exists(ExtensionsPath))
+            Directory.CreateDirectory(ExtensionsPath);
+        
         try
         {
             var loadingmods = Directory.EnumerateFiles(ExtensionsPath, "*.wwsext");
